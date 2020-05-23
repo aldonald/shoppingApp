@@ -29,6 +29,5 @@ router.register(r'shoppinglists', ShoppingListViewSet, 'shoppinglists')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    url(r'^api/', include((router.urls))),
-    path('/', include('accounts.urls')),
+    url(r'^api/', include((router.urls)))
 ]

@@ -1,12 +1,5 @@
 from django.db import models
-
-# Create your models here.
-
 from decimal import Decimal
-from urllib.parse import urlencode
-
-from django.conf import settings
-from django.db import models
 
 
 class ShoppingList(models.Model):

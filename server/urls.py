@@ -1,7 +1,7 @@
 
 from django.contrib import admin
 from rest_framework import routers
-from django.urls import path, include
+from django.urls import path
 from server.api.views import ShoppingItemViewSet, ShoppingListViewSet
 
 # Create our routers
