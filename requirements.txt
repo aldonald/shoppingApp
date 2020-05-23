@@ -4,5 +4,5 @@ djangorestframework>=3.11.0
 markdown
 django-filter
 djangorestframework-jsonapi
-django_heroku
+django-heroku
 gunicorn
