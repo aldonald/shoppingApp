@@ -1,4 +1,4 @@
-from django.conf.urls import url
+
 from django.contrib import admin
 from rest_framework import routers
 from django.urls import path, include
@@ -14,5 +14,4 @@ router.register(r'shoppinglists', ShoppingListViewSet, 'shoppinglists')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^api/', include((router.urls))),
 ]
