@@ -163,5 +163,8 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
 
+# Path for storage of pretrained model
+MODEL_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models/')
+
 # Configure Django App for Heroku.
 django_heroku.settings(locals())

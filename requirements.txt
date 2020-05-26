@@ -4,5 +4,10 @@ djangorestframework>=3.11.0
 markdown
 django-filter
 djangorestframework-jsonapi
-django-heroku
+django_heroku
 gunicorn
+tensorflow
+matplotlib
+numpy
+django-extra-fields
+pillow
