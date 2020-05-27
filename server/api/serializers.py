@@ -8,6 +8,7 @@ class ShoppingListSerializer(serializers.ModelSerializer):
         model = ShoppingList
         fields = (
             'name',
+            'user',
         )
 
 
@@ -23,7 +24,6 @@ class ShoppingItemSerializer(serializers.ModelSerializer):
             # Attributes
             'name',
             'image',
-            'barcode',
             'price',
 
             # Foreign Key
