@@ -16,7 +16,6 @@ class ShoppingItemSerializer(serializers.ModelSerializer):
     included_serializers = {
         'shopping_list': 'server.api.serializers.ShoppingListSerializer',
     }
-    image = Base64ImageField()
 
     class Meta:
         model = ShoppingItem
