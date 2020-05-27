@@ -6,8 +6,6 @@ django-filter
 djangorestframework-jsonapi
 django_heroku
 gunicorn
-tensorflow
-matplotlib
 numpy
 django-extra-fields
 pillow
