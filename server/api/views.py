@@ -1,3 +1,5 @@
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework_json_api.views import ModelViewSet
 from django.shortcuts import get_object_or_404
 from server.models import ShoppingList, ShoppingItem
@@ -8,6 +10,8 @@ from rest_framework import status
 
 class ShoppingListViewSet(ModelViewSet):
     """Gives us the api viewset for a shopping list"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = ShoppingList.objects.all()
     serializer_class = ShoppingListSerializer
 
@@ -17,6 +21,8 @@ class ShoppingListViewSet(ModelViewSet):
 
 class ShoppingItemViewSet(ModelViewSet):
     """Gives us the api viewset for a shopping item"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = ShoppingItem.objects.all()
     serializer_class = ShoppingItemSerializer
 

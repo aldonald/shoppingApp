@@ -1,12 +1,12 @@
 from rest_framework_json_api import serializers
 from server.models import ShoppingList, ShoppingItem
-from drf_extra_fields.fields import Base64ImageField
 
 class ShoppingListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingList
         fields = (
+            # Attributes
             'name',
             'user',
         )
