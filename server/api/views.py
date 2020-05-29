@@ -10,8 +10,7 @@ from rest_framework import status
 
 class ShoppingListViewSet(ModelViewSet):
     """Gives us the api viewset for a shopping list"""
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
     queryset = ShoppingList.objects.all()
     serializer_class = ShoppingListSerializer
 
@@ -21,8 +20,7 @@ class ShoppingListViewSet(ModelViewSet):
 
 class ShoppingItemViewSet(ModelViewSet):
     """Gives us the api viewset for a shopping item"""
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
     queryset = ShoppingItem.objects.all()
     serializer_class = ShoppingItemSerializer
 

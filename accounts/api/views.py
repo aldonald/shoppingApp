@@ -15,7 +15,6 @@ class IsSuperUser(IsAuthenticated):
 
 class UserViewSet(ModelViewSet):
     """Gives the api viewset for users"""
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsSuperUser]
     queryset = User.objects.all()
     serializer_class = UserSerializer
