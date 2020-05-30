@@ -40,8 +40,6 @@ class CreateUserView(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         data = CreateUserSerializer(request.data).data
-        import pdb
-        pdb.set_trace()
         find_user = User.objects.filter(username=data['username'])
         if not find_user.exists():
             user = User(
