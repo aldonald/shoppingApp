@@ -41,17 +41,12 @@ class CreateUserView(CreateAPIView):
     permission_classes = [permissions.AllowAny]
     queryset = User.objects.all()
     serializer_class = CreateUserSerializer
-    # allowed_methods = ['POST']
 
-    # def get(self, *args, **kwargs):
-    #     return None
-
-    # def create(self, request, validated_data, *args, **kwargs):
-    #     import pdb; pdb.set_trace()
-    #     user = super().create(validated_data)
-    #     user.set_password(validated_data['password'])
-    #     user.save()
-    #     return user
+    def create(self, request, validated_data, *args, **kwargs):
+        user = super().create(validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
     class Meta:
         model = User
