@@ -1,6 +1,7 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import permissions
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework_json_api import serializers
 from rest_framework_json_api.views import ModelViewSet
 from accounts.models import User
 from django.shortcuts import get_object_or_404
@@ -10,15 +11,10 @@ from rest_framework import status
 from rest_framework.generics import CreateAPIView
 
 
-class IsValidUser(IsAuthenticated):
-    def get_permissions(self, request, view):
-        return request.user and request.user.is_superuser
-
-
 class UserViewSet(ModelViewSet):
     """Gives the api viewset for users"""
     authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsValidUser]
+    permission_classes = [permissions.IsAdminUser]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -42,11 +38,13 @@ class CreateUserView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = CreateUserSerializer
 
-    def create(self, request, validated_data, *args, **kwargs):
-        user = super().create(validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
+    def create(self, request, *args, **kwargs):
+        find_user = User.objects.filter(username=request.data['username'])
+        if not find_user.exists():
+            user = User(username=request.data['username'], email=request.data['email'], password=request.data['password'])
+            user.save()
+        else:
+            user = find_user.first()
 
-    class Meta:
-        model = User
+        serializer = CreateUserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
