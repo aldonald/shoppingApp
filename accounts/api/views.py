@@ -39,12 +39,19 @@ class CreateUserView(CreateAPIView):
     serializer_class = CreateUserSerializer
 
     def create(self, request, *args, **kwargs):
-        find_user = User.objects.filter(username=request.data['username'])
+        data = CreateUserSerializer(request.data).data
+        import pdb
+        pdb.set_trace()
+        find_user = User.objects.filter(username=data['username'])
         if not find_user.exists():
-            user = User(username=request.data['username'], email=request.data['email'], password=request.data['password'])
+            user = User(
+                username=data['username'],
+                email=data['email']
+            )
+            user.set_password(data['password'])
             user.save()
         else:
             user = find_user.first()
 
-        serializer = CreateUserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        ser_user = CreateUserSerializer(user).data
+        return Response(ser_user, status=status.HTTP_201_CREATED)

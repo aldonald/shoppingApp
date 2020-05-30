@@ -23,6 +23,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.authtoken import views
 
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+
+
 # Create our routers
 router = routers.DefaultRouter()
 
