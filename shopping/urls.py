@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf.urls import url
 from rest_framework import routers
 from server.api.views import ShoppingItemViewSet, ShoppingListViewSet
+from accounts.api.views import UserViewSet, CreateUserView
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.authtoken import views
@@ -28,12 +29,16 @@ router = routers.DefaultRouter()
 # Register the sets router, endpoints for dealing with sets of model instances
 router.register(r'shoppingitems', ShoppingItemViewSet, 'shoppingitems')
 router.register(r'shoppinglists', ShoppingListViewSet, 'shoppinglists')
+router.register(r'accounts', UserViewSet, 'accounts_api')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
+    path('/', include('server.urls')),
+    path('', include('server.urls')),
     url(r'^api/', include((router.urls))),
-    url(r'^api-token-auth/', views.obtain_auth_token)
+    url(r'^api-token-auth/', views.obtain_auth_token),
+    url(r'^api/create_user', CreateUserView.as_view())
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

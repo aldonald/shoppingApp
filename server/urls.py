@@ -1,17 +1,8 @@
-
-from django.contrib import admin
-from rest_framework import routers
 from django.urls import path
-from server.api.views import ShoppingItemViewSet, ShoppingListViewSet
+from server.views import IndexView
 
-# Create our routers
-# Apps need to register any routes with each router, eg:
-router = routers.DefaultRouter()
-
-# Register the sets router, endpoints for dealing with sets of model instances
-router.register(r'shoppingitems', ShoppingItemViewSet, 'shoppingitems')
-router.register(r'shoppinglists', ShoppingListViewSet, 'shoppinglists')
+app_name = 'server'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', IndexView.as_view(), name='index'),
 ]

@@ -10,3 +10,14 @@ class UserSerializer(serializers.ModelSerializer):
             'username',
             'email',
         )
+
+
+class CreateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            # Attributes
+            'username',
+            'email',
+            'password',
+        )
