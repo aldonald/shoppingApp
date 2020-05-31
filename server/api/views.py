@@ -6,6 +6,7 @@ from server.models import ShoppingItem
 from server.api.serializers import ShoppingItemSerializer
 from rest_framework.response import Response
 from rest_framework import status
+import logging
 
 
 class ShoppingItemViewSet(ModelViewSet):
@@ -22,7 +23,7 @@ class ShoppingItemViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def perform_create(self, serializer):
-        super().perform_create(serializer)
+        logging.error(serializer.data)
         item = serializer.save()
         item.user = self.request.user
         item.save()

@@ -9,4 +9,3 @@ gunicorn
 numpy
 django-extra-fields
 pillow
-django-filter
