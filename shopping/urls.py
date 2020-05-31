@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 from rest_framework import routers
-from server.api.views import ShoppingItemViewSet, ShoppingListViewSet
+from server.api.views import ShoppingItemViewSet
 from accounts.api.views import UserViewSet, CreateUserView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -33,7 +33,6 @@ router = routers.DefaultRouter()
 
 # Register the sets router, endpoints for dealing with sets of model instances
 router.register(r'shoppingitems', ShoppingItemViewSet, 'shoppingitems')
-router.register(r'shoppinglists', ShoppingListViewSet, 'shoppinglists')
 router.register(r'accounts', UserViewSet, 'accounts_api')
 
 urlpatterns = [

@@ -1,20 +1,9 @@
 from rest_framework_json_api import serializers
-from server.models import ShoppingList, ShoppingItem
-
-class ShoppingListSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ShoppingList
-        fields = (
-            # Attributes
-            'name',
-            'user',
-        )
-
+from server.models import ShoppingItem
 
 class ShoppingItemSerializer(serializers.ModelSerializer):
     included_serializers = {
-        'shopping_list': 'server.api.serializers.ShoppingListSerializer',
+        'user': 'server.api.serializers.UserSerializer',
     }
 
     class Meta:
@@ -26,5 +15,5 @@ class ShoppingItemSerializer(serializers.ModelSerializer):
             'price',
 
             # Foreign Key
-            'shopping_list',
+            'user',
         )
