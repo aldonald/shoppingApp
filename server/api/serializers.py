@@ -3,7 +3,7 @@ from server.models import ShoppingItem
 
 class ShoppingItemSerializer(serializers.ModelSerializer):
     included_serializers = {
-        'user': 'server.api.serializers.UserSerializer',
+        'user': 'accounts.api.serializers.UserSerializer',
     }
 
     class Meta:
