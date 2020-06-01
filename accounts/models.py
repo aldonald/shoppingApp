@@ -11,4 +11,5 @@ class User(AbstractUser):
 
 class AccountToken(models.Model):
     firebaseToken = models.CharField(max_length=100, unique=True)
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.SET_NULL)
