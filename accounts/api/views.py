@@ -1,6 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import permissions
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework_json_api import serializers
 from rest_framework_json_api.views import ModelViewSet
 from accounts.models import User, AccountToken
@@ -10,6 +10,16 @@ from accounts.api.serializers import UserSerializer, CreateUserSerializer, Creat
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from django.core.exceptions import ValidationError
+
+
+class ViewIfAdminPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_superuser:
+            return True
+        elif request.method == 'POST' and request.user.is_authenticated:
+            return True
+        else:
+            return False
 
 
 class UserViewSet(ModelViewSet):
@@ -58,12 +68,13 @@ class CreateUserView(CreateAPIView):
 
 class AccountTokenView(ModelViewSet):
     """Allows end point to create firebase token"""
-    permission_classes = (IsAuthenticated,)
+    authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
+    permission_classes = (ViewIfAdminPermission,)
     queryset = AccountToken.objects.all()
     serializer_class = CreateAccountTokenSerializer
-    http_method_names = ['post']
 
     def create(self, request, *args, **kwargs):
+        import pdb; pdb.set_trace()
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             self.perform_create(serializer)
