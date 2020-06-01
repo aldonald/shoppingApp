@@ -2,6 +2,7 @@ from django.core.files.base import ContentFile
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework_json_api.views import ModelViewSet
+from accounts.models import AccountToken
 from django.shortcuts import get_object_or_404
 from server.models import ShoppingItem
 from server.api.serializers import ShoppingItemSerializer, AddShoppingItemSerializer
@@ -70,7 +71,8 @@ class AddItemFromPi(ModelViewSet):
         item = serializer.save()
         item.user = self.request.user
         item.save()
-        send_notification()
+        token = AccountToken.objects.get(user_id=item.user.id)
+        send_notification(token, item.name)
         return item
 
     def delete(self, request, pk):
