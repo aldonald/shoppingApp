@@ -66,7 +66,7 @@ class CreateUserView(CreateAPIView):
         return Response(ser_user, status=status.HTTP_201_CREATED)
 
 
-class AccountTokenView(ModelViewSet):
+class AccountTokenView(CreateAPIView):
     """Allows end point to create firebase token"""
     authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = (ViewIfAdminPermission,)
@@ -74,30 +74,20 @@ class AccountTokenView(ModelViewSet):
     serializer_class = CreateAccountTokenSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            data = serializer.data
-        else:
-            try:
-                firebaseToken = request.data['firebaseToken']
-                AccountToken.objects.get(firebaseToken=firebaseToken)
-                data = {'firebaseToken': "Token already exists"}
-                headers = {}
-            except AccountToken.DoesNotExist:
-                serializer.is_valid(raise_exception=True)
-        
-        return Response(data, status=status.HTTP_201_CREATED, headers=headers)
+        data = CreateAccountTokenSerializer(request.data).data
+        find_token = AccountToken.objects.filter(firebaseToken=data['firebaseToken'])
 
-    def perform_create(self, serializer):
-        try:
-            item = serializer.save()
-            item.user = self.request.user
-            item.save()
-        except:
-            pass
-        return item
+        if not find_token.exists():
+            token = AccountToken(
+                firebaseToken=data['firebaseToken'],
+            )
+            token.user(request.user)
+            token.save()
+        else:
+            token = find_token.first()
+
+        serial_token = CreateAccountTokenSerializer(token)
+        return Response(serial_token, status=status.HTTP_201_CREATED)
 
     class Meta:
         model = AccountToken
