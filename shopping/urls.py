@@ -45,7 +45,7 @@ urlpatterns = [
     url(r'^api/', include((router.urls))),
     url(r'^api-token-auth/', views.obtain_auth_token),
     url(r'^api/create_user', CreateUserView.as_view()),
-    url(r'add_ftoken', AccountTokenView.as_view(), 'add_firebase_token'),
+    url(r'^api/add_ftoken', AccountTokenView.as_view())
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
