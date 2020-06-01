@@ -7,6 +7,7 @@ from server.models import ShoppingItem
 from server.api.serializers import ShoppingItemSerializer, AddShoppingItemSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import redirect, reverse
 
 
 class ShoppingItemViewSet(ModelViewSet):
@@ -39,7 +40,12 @@ class AddShoppingItemViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = ShoppingItem.objects.all()
     serializer_class = AddShoppingItemSerializer
-    http_method_names = ['POST']
+
+    def get(self, request, *args, **kwargs):
+        return redirect('/api/shoppingitems')
+
+    def list(self, request, *args, **kwargs):
+        return redirect('/api/shoppingitems')
 
     def perform_create(self, serializer):
         item = serializer.save()
