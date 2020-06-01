@@ -74,7 +74,6 @@ class AccountTokenView(ModelViewSet):
     serializer_class = CreateAccountTokenSerializer
 
     def create(self, request, *args, **kwargs):
-        import pdb; pdb.set_trace()
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             self.perform_create(serializer)
