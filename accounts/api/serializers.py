@@ -29,5 +29,5 @@ class CreateAccountTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountToken
         fields = (
-            'token',
+            'firebaseToken',
         )

@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import redirect, reverse
 from server.app_messaging import send_notification
+import logging
 
 
 class ShoppingItemViewSet(ModelViewSet):
@@ -71,8 +72,11 @@ class AddItemFromPi(ModelViewSet):
         item = serializer.save()
         item.user = self.request.user
         item.save()
-        token = AccountToken.objects.get(user_id=item.user.id)
-        send_notification(token, item.name)
+        try:
+            token = AccountToken.objects.get(user_id=item.user.id)
+            send_notification(token, item.name)
+        except AccountToken.DoesNotExist:
+            logging.error(f"{user.name} does not have a token set.")
         return item
 
     def delete(self, request, pk):
