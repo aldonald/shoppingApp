@@ -10,6 +10,7 @@ from accounts.api.serializers import UserSerializer, CreateUserSerializer, Creat
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from django.core.exceptions import ValidationError
+import logging
 
 
 class ViewIfAdminPermission(permissions.BasePermission):
@@ -66,28 +67,40 @@ class CreateUserView(CreateAPIView):
         return Response(ser_user, status=status.HTTP_201_CREATED)
 
 
-class AccountTokenView(CreateAPIView):
+class AccountTokenView(ModelViewSet):
     """Allows end point to create firebase token"""
     authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = (ViewIfAdminPermission,)
     queryset = AccountToken.objects.all()
     serializer_class = CreateAccountTokenSerializer
+    # http_method_names = ['post']
 
     def create(self, request, *args, **kwargs):
-        data = CreateAccountTokenSerializer(request.data).data
-        find_token = AccountToken.objects.filter(firebaseToken=data['firebaseToken'])
-
-        if not find_token.exists():
-            token = AccountToken(
-                firebaseToken=data['firebaseToken'],
-            )
-            token.user(request.user)
-            token.save()
+        logging.warning(request.data)
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            data = serializer.data
         else:
-            token = find_token.first()
+            try:
+                firebaseToken = request.data['firebaseToken']
+                AccountToken.objects.get(firebaseToken=firebaseToken)
+                data = {'firebaseToken': "Token already exists"}
+                headers = {}
+            except AccountToken.DoesNotExist:
+                serializer.is_valid(raise_exception=True)
+        
+        return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
-        serial_token = CreateAccountTokenSerializer(token)
-        return Response(serial_token, status=status.HTTP_201_CREATED)
+    def perform_create(self, serializer):
+        try:
+            item = serializer.save()
+            item.user = self.request.user
+            item.save()
+        except:
+            pass
+        return item
 
     class Meta:
         model = AccountToken
