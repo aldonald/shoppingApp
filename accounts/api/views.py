@@ -3,10 +3,10 @@ from rest_framework import permissions
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework_json_api import serializers
 from rest_framework_json_api.views import ModelViewSet
-from accounts.models import User
+from accounts.models import User, AccountToken
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from accounts.api.serializers import UserSerializer, CreateUserSerializer
+from accounts.api.serializers import UserSerializer, CreateUserSerializer, CreateAccountTokenSerializer
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 
@@ -51,5 +51,22 @@ class CreateUserView(CreateAPIView):
         else:
             user = find_user.first()
 
-        ser_user = CreateUserSerializer(user).data
+        ser_user = UserSerializer(user).data
         return Response(ser_user, status=status.HTTP_201_CREATED)
+
+
+class AccountTokenView(ModelViewSet):
+    """Allows end point to create firebase token"""
+    permission_classes = (IsAuthenticated,)
+    queryset = AccountToken.objects.all()
+    serializer_class = CreateAccountTokenSerializer
+    http_method_names = ['POST']
+
+    def perform_create(self, serializer):
+        item = serializer.save()
+        item.user = self.request.user
+        item.save()
+        return item
+
+    class Meta:
+        model = AccountToken

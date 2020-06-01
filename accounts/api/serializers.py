@@ -1,5 +1,5 @@
 from rest_framework_json_api import serializers
-from accounts.models import User
+from accounts.models import User, AccountToken
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,4 +22,12 @@ class CreateUserSerializer(serializers.ModelSerializer):
             'username',
             'email',
             'password',
+        )
+
+
+class CreateAccountTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccountToken
+        fields = (
+            'token',
         )
