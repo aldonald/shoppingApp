@@ -8,6 +8,7 @@ from server.api.serializers import ShoppingItemSerializer, AddShoppingItemSerial
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import redirect, reverse
+from server.app_messaging import send_notification
 
 
 class ShoppingItemViewSet(ModelViewSet):
@@ -52,6 +53,30 @@ class AddShoppingItemViewSet(ModelViewSet):
         item.user = self.request.user
         item.save()
         return item
+
+    class Meta:
+        model = ShoppingItem
+
+
+class AddItemFromPi(ModelViewSet):
+    """Allows items to be added from the Raspberry Pi"""
+    authentication_classes = [
+        TokenAuthentication, SessionAuthentication, BasicAuthentication]
+    permission_classes = (IsAuthenticated,)
+    queryset = ShoppingItem.objects.all()
+    serializer_class = ShoppingItemSerializer
+
+    def perform_create(self, serializer):
+        item = serializer.save()
+        item.user = self.request.user
+        item.save()
+        send_notification()
+        return item
+
+    def delete(self, request, pk):
+        item = get_object_or_404(self.queryset, pk=pk)
+        item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     class Meta:
         model = ShoppingItem

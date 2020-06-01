@@ -9,3 +9,5 @@ gunicorn
 numpy
 django-extra-fields
 pillow
+django-extensions
+firebase-admin=4.3.0
