@@ -60,7 +60,7 @@ class AccountTokenView(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = AccountToken.objects.all()
     serializer_class = CreateAccountTokenSerializer
-    http_method_names = ['POST']
+    http_method_names = ['post']
 
     def perform_create(self, serializer):
         item = serializer.save()
