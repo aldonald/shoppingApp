@@ -60,7 +60,7 @@ class UserViewSet(ModelViewSet):
         user = request.user
         tokens = AccountToken.objects.filter(user=user)
         if not tokens.exists():
-            beams_token = beams_client.generate_token(user.id)
+            beams_token = beams_client.generate_token(user.name)
             new_token = AccountToken(
                 firebaseToken=beams_token,
                 user=user
@@ -99,43 +99,43 @@ class CreateUserView(CreateAPIView):
         return Response(ser_user, status=status.HTTP_201_CREATED)
 
 
-class AccountTokenView(ModelViewSet):
-    """Allows end point to create firebase token"""
-    authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
-    permission_classes = (ViewIfAdminPermission,)
-    queryset = AccountToken.objects.all()
-    serializer_class = AccountTokenSerializer
-    # http_method_names = ['post']
+# class AccountTokenView(ModelViewSet):
+#     """Allows end point to create firebase token"""
+#     authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
+#     permission_classes = (ViewIfAdminPermission,)
+#     queryset = AccountToken.objects.all()
+#     serializer_class = AccountTokenSerializer
+#     # http_method_names = ['post']
 
-    def create(self, request, *args, **kwargs):
-        logging.warning(request.data)
-        serializer = self.get_serializer(data=request.data)
-        logging.warning(serializer)
-        if serializer.is_valid():
-            logging.warning("Serializer valid")
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            data = serializer.data
-        else:
-            try:
-                firebaseToken = request.data['firebaseToken']
-                logging.warning(f"token is {firebaseToken}")
-                token = AccountToken.objects.get(firebaseToken=firebaseToken)
-                if (token): logging.warning(f"token retrieved")
-                data = {'firebaseToken': "Token already exists"}
-                headers = {}
-            except AccountToken.DoesNotExist:
-                logging.warning(f"token did not exist")
-                serializer.is_valid(raise_exception=True)
+#     def create(self, request, *args, **kwargs):
+#         logging.warning(request.data)
+#         serializer = self.get_serializer(data=request.data)
+#         logging.warning(serializer)
+#         if serializer.is_valid():
+#             logging.warning("Serializer valid")
+#             self.perform_create(serializer)
+#             headers = self.get_success_headers(serializer.data)
+#             data = serializer.data
+#         else:
+#             try:
+#                 firebaseToken = request.data['firebaseToken']
+#                 logging.warning(f"token is {firebaseToken}")
+#                 token = AccountToken.objects.get(firebaseToken=firebaseToken)
+#                 if (token): logging.warning(f"token retrieved")
+#                 data = {'firebaseToken': "Token already exists"}
+#                 headers = {}
+#             except AccountToken.DoesNotExist:
+#                 logging.warning(f"token did not exist")
+#                 serializer.is_valid(raise_exception=True)
         
-        return Response(data, status=status.HTTP_201_CREATED, headers=headers)
+#         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
-    def perform_create(self, serializer):
-        item = serializer.save()
-        item.user = self.request.user
-        item.save()
-        return item
+#     def perform_create(self, serializer):
+#         item = serializer.save()
+#         item.user = self.request.user
+#         item.save()
+#         return item
         
 
-    class Meta:
-        model = AccountToken
+#     class Meta:
+#         model = AccountToken
