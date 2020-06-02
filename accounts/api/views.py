@@ -60,7 +60,7 @@ class UserViewSet(ModelViewSet):
         user = request.user
         tokens = AccountToken.objects.filter(user=user)
         if not tokens.exists():
-            beams_token = beams_client.generate_token(user.name)
+            beams_token = beams_client.generate_token(user.id)
             new_token = AccountToken(
                 firebaseToken=beams_token,
                 user=user
