@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'django_extensions',
+    'fcm_django',
 ]
 
 MIDDLEWARE = [
@@ -153,6 +154,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LOGIN_URL = '/accounts/login/'
 AUTH_USER_MODEL = 'accounts.User'
+
+FCM_DJANGO_SETTINGS = {
+    "FCM_SERVER_KEY": "AAAAoHyd7-Q:APA91bFhXl5vv0DGXHZFmHd75mG1B9LktkjBx-ZUuVPRjjrhsdeT9FBHy9qllEy-Marnmv3t2hC-Kg8coqsdOrxFXlBlt630CCHhu_T4eIKORFkKQWkE3QgUrMSpwJaYwf50CF0AV8Z0"
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

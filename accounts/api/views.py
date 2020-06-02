@@ -6,12 +6,19 @@ from rest_framework_json_api.views import ModelViewSet
 from accounts.models import User, AccountToken
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from accounts.api.serializers import UserSerializer, CreateUserSerializer, CreateAccountTokenSerializer
+from accounts.api.serializers import UserSerializer, CreateUserSerializer, AccountTokenSerializer
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from django.core.exceptions import ValidationError
 import logging
+from rest_framework.decorators import action
+from pusher_push_notifications import PushNotifications
 
+
+beams_client = PushNotifications(
+    instance_id='8d9473dd-0a61-4ac4-88de-d5dc18ad095a',
+    secret_key='DFF47EC3886A6D1C2947F6A1C3ADD2D91D1256DF73E52A408D247A7A8E8BCA11',
+)
 
 class ViewIfAdminPermission(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -23,22 +30,41 @@ class ViewIfAdminPermission(permissions.BasePermission):
             return False
 
 
+class NormalAccessPerm(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_superuser:
+            return True
+        elif request.method == 'GET' and request.user.is_authenticated:
+            return True
+        else:
+            return False
+
+
 class UserViewSet(ModelViewSet):
     """Gives the api viewset for users"""
     authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [NormalAccessPerm]
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-    def list(self, request, *args, **kwargs):
-        if request.user and request.user.is_superuser:
-            return super().list(request, *args, **kwargs)
 
     def delete(self, request, pk):
         if request.user and request.user.is_superuser:
             item = get_object_or_404(self.queryset, pk=pk)
             item.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+    @action(detail=False, methods=['get'])
+    def beams_auth(self, request):
+        user = request.user
+        tokens = AccountToken.objects.filter(user=user)
+        if not tokens.exists():
+            beams_token = beams_client.generate_token(user.id)
+        else:
+            beams_token = tokens.last()
+        beams_token = AccountTokenSerializer(beams_token).data
+        return Response(beams_token)
+
 
     class Meta:
         model = User
@@ -72,7 +98,7 @@ class AccountTokenView(ModelViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = (ViewIfAdminPermission,)
     queryset = AccountToken.objects.all()
-    serializer_class = CreateAccountTokenSerializer
+    serializer_class = AccountTokenSerializer
     # http_method_names = ['post']
 
     def create(self, request, *args, **kwargs):

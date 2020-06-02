@@ -11,3 +11,6 @@ django-extra-fields
 pillow
 django-extensions
 firebase-admin>=4.3.0
+fcm-django
+pusher
+pusher_push_notifications

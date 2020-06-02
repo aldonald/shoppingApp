@@ -25,7 +25,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
         )
 
 
-class CreateAccountTokenSerializer(serializers.ModelSerializer):
+class AccountTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountToken
         fields = (

@@ -72,11 +72,12 @@ class AddItemFromPi(ModelViewSet):
         item = serializer.save()
         item.user = self.request.user
         item.save()
-        try:
-            token = AccountToken.objects.get(user_id=item.user.id)
-            send_notification(token, [item.name])
-        except AccountToken.DoesNotExist:
-            logging.error(f"{user.name} does not have a token set.")
+        token_qs = AccountToken.objects.filter(user_id=item.user.id)
+        if token_qs.exists():
+            token_list = [x.firebaseToken for x in token_qs]
+            send_notification(token_list, item.name)
+        else:
+            logging.error(f"{item.user.name} does not have a token set.")
         return item
 
     def delete(self, request, pk):
