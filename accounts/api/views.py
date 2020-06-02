@@ -59,7 +59,7 @@ class UserViewSet(ModelViewSet):
         user = request.user
         tokens = AccountToken.objects.filter(user=user)
         if not tokens.exists():
-            beams_token = beams_client.generate_token(user.id)
+            beams_token = beams_client.generate_token(user.username)
         else:
             beams_token = tokens.last()
         beams_token = AccountTokenSerializer(beams_token).data
