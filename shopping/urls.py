@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf.urls import url
 from rest_framework import routers
 from server.api.views import ShoppingItemViewSet, AddShoppingItemViewSet, AddItemFromPi
-from accounts.api.views import UserViewSet, CreateUserView, AccountTokenView
+from accounts.api.views import UserViewSet, CreateUserView
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.authtoken import views
@@ -35,7 +35,7 @@ router = routers.DefaultRouter()
 router.register(r'shoppingitems', ShoppingItemViewSet, 'shoppingitems')
 router.register(r'add_shopping_item', AddShoppingItemViewSet, 'add_shopping_item')
 router.register(r'accounts', UserViewSet, 'accounts_api')
-router.register(r'add_ftoken', AccountTokenView, 'add_firebase_token')
+# router.register(r'add_ftoken', AccountTokenView, 'add_firebase_token')
 router.register(r'pi_add_item', AddItemFromPi, 'pi_add_item')
 
 urlpatterns = [
