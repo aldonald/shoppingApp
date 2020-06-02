@@ -2,9 +2,9 @@ from firebase_admin import messaging
 from accounts.models import AccountToken
 import datetime
 
-def send_notification(registration_token, item_added):
+def send_notification(registration_token, items_added):
     message = messaging.MulticastMessage(
-        data={'item': item_added, 'time': str(datetime.datetime.now())},
+        data={'item': items_added, 'time': str(datetime.datetime.now())},
         tokens=registration_token,
     )
 

@@ -74,7 +74,7 @@ class AddItemFromPi(ModelViewSet):
         item.save()
         try:
             token = AccountToken.objects.get(user_id=item.user.id)
-            send_notification(token, item.name)
+            send_notification(token, [item.name])
         except AccountToken.DoesNotExist:
             logging.error(f"{user.name} does not have a token set.")
         return item
