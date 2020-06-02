@@ -14,6 +14,8 @@ import logging
 from rest_framework.decorators import action
 from pusher_push_notifications import PushNotifications
 from django.http import JsonResponse
+from accounts.api.filters import UserFilterSet
+from rest_framework import filters
 
 
 beams_client = PushNotifications(
@@ -45,8 +47,14 @@ class UserViewSet(ModelViewSet):
     """Gives the api viewset for users"""
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [NormalAccessPerm]
-    queryset = User.objects.all()
     serializer_class = UserSerializer
+    filter_class = UserFilterSet
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return User.objects.all()
+        return User.objects.filter(user=user)
 
     def delete(self, request, pk):
         if request.user and request.user.is_superuser:
@@ -54,11 +62,12 @@ class UserViewSet(ModelViewSet):
             item.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-
     @action(detail=False, methods=['get'])
     def beams_auth(self, request):
         user = request.user
         tokens = AccountToken.objects.filter(user=user)
+        logging.warning(
+            f"beams_auth was called. There was a token already: {tokens.exists()}")
         if not tokens.exists():
             beams_token = beams_client.generate_token(user.name)
             new_token = AccountToken(
@@ -69,6 +78,7 @@ class UserViewSet(ModelViewSet):
         else:
             beams_token = tokens.last()
         beams_token = AccountTokenSerializer(beams_token).data
+        logging.warning(f"{beams_token} is the token sent")
         return JsonResponse(beams_token)
 
 

@@ -18,8 +18,13 @@ class ShoppingItemViewSet(ModelViewSet):
     authentication_classes = [
         TokenAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = (IsAuthenticated,)
-    queryset = ShoppingItem.objects.all()
     serializer_class = ShoppingItemSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return ShoppingItem.objects.all()
+        return ShoppingItem.objects.filter(user=user)
 
     def delete(self, request, pk):
         item = get_object_or_404(self.queryset, pk=pk)
@@ -41,8 +46,13 @@ class AddShoppingItemViewSet(ModelViewSet):
     authentication_classes = [
         TokenAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = (IsAuthenticated,)
-    queryset = ShoppingItem.objects.all()
     serializer_class = AddShoppingItemSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return ShoppingItem.objects.all()
+        return ShoppingItem.objects.filter(user=user)
 
     def get(self, request, *args, **kwargs):
         return redirect('/api/shoppingitems')
@@ -65,8 +75,13 @@ class AddItemFromPi(ModelViewSet):
     authentication_classes = [
         TokenAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = (IsAuthenticated,)
-    queryset = ShoppingItem.objects.all()
     serializer_class = ShoppingItemSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return ShoppingItem.objects.all()
+        return ShoppingItem.objects.filter(user=user)
 
     def perform_create(self, serializer):
         item = serializer.save()
