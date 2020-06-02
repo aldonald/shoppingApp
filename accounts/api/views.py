@@ -99,13 +99,11 @@ class AccountTokenView(ModelViewSet):
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
-        try:
-            item = serializer.save()
-            item.user = self.request.user
-            item.save()
-        except:
-            pass
+        item = serializer.save()
+        item.user = self.request.user
+        item.save()
         return item
+        
 
     class Meta:
         model = AccountToken
