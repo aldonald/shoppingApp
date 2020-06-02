@@ -13,6 +13,7 @@ from django.core.exceptions import ValidationError
 import logging
 from rest_framework.decorators import action
 from pusher_push_notifications import PushNotifications
+from django.http import JsonResponse
 
 
 beams_client = PushNotifications(
@@ -59,11 +60,16 @@ class UserViewSet(ModelViewSet):
         user = request.user
         tokens = AccountToken.objects.filter(user=user)
         if not tokens.exists():
-            beams_token = beams_client.generate_token(user.username)
+            beams_token = beams_client.generate_token(user.name)
+            new_token = AccountToken(
+                firebaseToken=beams_token,
+                user=user
+            )
+            new_token.save()
         else:
             beams_token = tokens.last()
         beams_token = AccountTokenSerializer(beams_token).data
-        return Response(beams_token)
+        return JsonResponse(beams_token)
 
 
     class Meta:
