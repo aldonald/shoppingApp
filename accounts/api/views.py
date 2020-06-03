@@ -35,6 +35,8 @@ class ViewIfAdminPermission(permissions.BasePermission):
 
 class NormalAccessPerm(permissions.BasePermission):
     def has_permission(self, request, view):
+        logging.warning(
+            f"{request.user} is trying to log in. They are authenticated {request.user.is_authenticated}. They are a superuser: {request.user.is_superuser}.")
         if request.user.is_superuser:
             return True
         elif request.method == 'GET' and request.user.is_authenticated:
