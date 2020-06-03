@@ -4,6 +4,7 @@ from accounts.models import AccountToken
 import datetime
 import pusher
 from pusher_push_notifications import PushNotifications
+import logging
 
 beams_client = PushNotifications(
     instance_id='8d9473dd-0a61-4ac4-88de-d5dc18ad095a',
@@ -11,6 +12,8 @@ beams_client = PushNotifications(
 )
 
 def send_notification(users, items_added):
+    logging.warning("Sending notifiaction to Pusher.")
+    logging.warning(f"Users in request: {users}. Items added are: {items_added}.")
     response = beams_client.publish_to_users(
         user_ids=users,
         publish_body={
