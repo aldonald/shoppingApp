@@ -47,7 +47,8 @@ class NormalAccessPerm(permissions.BasePermission):
 
 class UserViewSet(ModelViewSet):
     """Gives the api viewset for users"""
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    authentication_classes = [
+        TokenAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = [NormalAccessPerm]
     serializer_class = UserSerializer
     filter_class = UserFilterSet
