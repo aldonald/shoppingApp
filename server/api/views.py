@@ -89,7 +89,8 @@ class AddItemFromPi(ModelViewSet):
         item.save()
         token_qs = AccountToken.objects.filter(user_id=item.user.id)
         if token_qs.exists():
-            user_list = [item.user.id]
+            user_list = [f"{item.user.id}"]
+            logging.warning(f"User is {item.user.id} and the token is {token_qs.first().firebaseToken}")
             send_notification(user_list, item.name)
         else:
             logging.error(f"{item.user.name} does not have a token set.")
