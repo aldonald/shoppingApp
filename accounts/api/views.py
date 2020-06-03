@@ -71,7 +71,7 @@ class UserViewSet(ModelViewSet):
         logging.warning(
             f"beams_auth was called. There was a token already: {tokens.exists()}")
         if not tokens.exists():
-            beams_token = beams_client.generate_token(user.name)
+            beams_token = beams_client.generate_token(user.id)
             new_token = AccountToken(
                 firebaseToken=beams_token,
                 user=user
