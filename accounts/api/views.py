@@ -71,15 +71,13 @@ class UserViewSet(ModelViewSet):
         tokens = AccountToken.objects.filter(user=user)
         logging.warning(
             f"beams_auth was called. There was a token already: {tokens.exists()}")
-        if not tokens.exists():
-            beams_token = beams_client.generate_token(user.id)
-            new_token = AccountToken(
-                firebaseToken=beams_token,
-                user=user
-            )
-            new_token.save()
-        else:
-            beams_token = tokens.last()
+        beams_token = beams_client.generate_token(user.id)
+        new_token = AccountToken(
+            firebaseToken=beams_token,
+            user=user
+        )
+        new_token.save()
+
         beams_token = AccountTokenSerializer(beams_token).data
         logging.warning(f"{beams_token} is the token sent")
         return JsonResponse(beams_token)
