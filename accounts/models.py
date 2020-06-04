@@ -10,6 +10,6 @@ class User(AbstractUser):
         return self.username
 
 class AccountToken(models.Model):
-    firebaseToken = models.CharField(max_length=200, unique=True)
+    firebaseToken = models.CharField(max_length=1000, unique=True)
     user = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.SET_NULL)
