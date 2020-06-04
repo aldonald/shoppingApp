@@ -87,7 +87,8 @@ class AddItemFromPi(ModelViewSet):
         item = serializer.save()
         item.user = self.request.user
         item.save()
-        send_notification(f"{item.user.id}", item.name)
+        user_id = f"{item.user.id}"
+        send_notification([user_id], item.name)
         return item
 
     def delete(self, request, pk):
