@@ -16,19 +16,19 @@ def send_notification(users, items_added):
         publish_body={
             'apns': {
                 'aps': {
-                    'alert': 'Hello!',
+                    'alert': 'Shopping list',
                 },
             },
             'fcm': {
                 'notification': {
-                    'title': 'Hello',
-                    'body': 'Hello, world!',
+                    'title': 'Shopping List',
+                    'body': f'{items_added} has been added to your shopping list!',
                 },
             },
             'web': {
                 'notification': {
-                    'title': 'Hello',
-                    'body': 'Hello, world!',
+                    'title': 'Shopping List',
+                    'body': f'{items_added} has been added to your shopping list!',
                 },
             },
         },
