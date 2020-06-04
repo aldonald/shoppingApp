@@ -68,20 +68,9 @@ class UserViewSet(ModelViewSet):
     @action(detail=False, methods=['get'])
     def beams_auth(self, request):
         user = request.user
-        tokens = AccountToken.objects.filter(user=user)
-        logging.warning(
-            f"beams_auth was called. There was a token already: {tokens.exists()}")
         beams_token = beams_client.generate_token(f"{user.id}")
-        new_token = AccountToken(
-            firebaseToken=beams_token,
-            user=user
-        )
-        new_token.save()
-
-        beams_token = AccountTokenSerializer(beams_token).data
         logging.warning(f"{beams_token} is the token sent")
         return JsonResponse(beams_token)
-
 
     class Meta:
         model = User
