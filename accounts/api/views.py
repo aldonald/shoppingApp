@@ -57,7 +57,7 @@ class UserViewSet(ModelViewSet):
         user = self.request.user
         if user.is_superuser:
             return User.objects.all()
-        return User.objects.filter(user=user)
+        return User.objects.filter(pk=user.id)
 
     def delete(self, request, pk):
         if request.user and request.user.is_superuser:
