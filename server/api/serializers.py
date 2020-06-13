@@ -25,6 +25,7 @@ class AddShoppingItemSerializer(serializers.ModelSerializer):
         'user': 'accounts.api.serializers.UserSerializer',
     }
 
+    # This field allows the receipt of a bit stream from Android
     image = HybridImageField()
 
     class Meta:

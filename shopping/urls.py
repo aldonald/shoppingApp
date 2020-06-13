@@ -35,7 +35,7 @@ router = routers.DefaultRouter()
 router.register(r'shoppingitems', ShoppingItemViewSet, 'shoppingitems')
 router.register(r'add_shopping_item', AddShoppingItemViewSet, 'add_shopping_item')
 router.register(r'accounts', UserViewSet, 'accounts_api')
-# router.register(r'add_ftoken', AccountTokenView, 'add_firebase_token')
+# This endpoint to add items to Pi
 router.register(r'pi_add_item', AddItemFromPi, 'pi_add_item')
 
 urlpatterns = [
@@ -44,7 +44,7 @@ urlpatterns = [
     path('/', include('server.urls')),
     path('', include('server.urls')),
     url(r'^api/', include((router.urls))),
-    url(r'^api-token-auth/', views.obtain_auth_token),
+    url(r'^api-token-auth/', views.obtain_auth_token), # This endpoint to get token
     url(r'^api/create_user', CreateUserView.as_view())
 ]
 

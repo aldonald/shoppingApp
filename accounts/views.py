@@ -7,6 +7,11 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
 
+### #####
+# This file allows for log in if the user wants to use the APIs manually
+#########
+
+
 def user_login(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:

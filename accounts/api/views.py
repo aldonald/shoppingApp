@@ -17,12 +17,13 @@ from django.http import JsonResponse
 from accounts.api.filters import UserFilterSet
 from rest_framework import filters
 
-
+# Auth details for use in Beams
 beams_client = PushNotifications(
     instance_id='8d9473dd-0a61-4ac4-88de-d5dc18ad095a',
     secret_key='DFF47EC3886A6D1C2947F6A1C3ADD2D91D1256DF73E52A408D247A7A8E8BCA11',
 )
 
+# Set up specific permissions
 class ViewIfAdminPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.user.is_superuser:
@@ -33,6 +34,7 @@ class ViewIfAdminPermission(permissions.BasePermission):
             return False
 
 
+# Another permission class
 class NormalAccessPerm(permissions.BasePermission):
     def has_permission(self, request, view):
         logging.warning(
@@ -45,6 +47,9 @@ class NormalAccessPerm(permissions.BasePermission):
             return False
 
 
+# This is the standard user viewset - allows delete if superuser.
+# There is also a bespoke beams end point for the Beams server to 
+# verify the user when they receive a request from Android device. 
 class UserViewSet(ModelViewSet):
     """Gives the api viewset for users"""
     authentication_classes = [
@@ -76,6 +81,7 @@ class UserViewSet(ModelViewSet):
         model = User
 
 
+# Create user endpoint without permission to allow sign-up
 class CreateUserView(CreateAPIView):
     """Allows end point to create user"""
     permission_classes = [permissions.AllowAny]
@@ -97,45 +103,3 @@ class CreateUserView(CreateAPIView):
 
         ser_user = UserSerializer(user).data
         return Response(ser_user, status=status.HTTP_201_CREATED)
-
-
-# class AccountTokenView(ModelViewSet):
-#     """Allows end point to create firebase token"""
-#     authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
-#     permission_classes = (ViewIfAdminPermission,)
-#     queryset = AccountToken.objects.all()
-#     serializer_class = AccountTokenSerializer
-#     # http_method_names = ['post']
-
-#     def create(self, request, *args, **kwargs):
-#         logging.warning(request.data)
-#         serializer = self.get_serializer(data=request.data)
-#         logging.warning(serializer)
-#         if serializer.is_valid():
-#             logging.warning("Serializer valid")
-#             self.perform_create(serializer)
-#             headers = self.get_success_headers(serializer.data)
-#             data = serializer.data
-#         else:
-#             try:
-#                 firebaseToken = request.data['firebaseToken']
-#                 logging.warning(f"token is {firebaseToken}")
-#                 token = AccountToken.objects.get(firebaseToken=firebaseToken)
-#                 if (token): logging.warning(f"token retrieved")
-#                 data = {'firebaseToken': "Token already exists"}
-#                 headers = {}
-#             except AccountToken.DoesNotExist:
-#                 logging.warning(f"token did not exist")
-#                 serializer.is_valid(raise_exception=True)
-        
-#         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
-
-#     def perform_create(self, serializer):
-#         item = serializer.save()
-#         item.user = self.request.user
-#         item.save()
-#         return item
-        
-
-#     class Meta:
-#         model = AccountToken

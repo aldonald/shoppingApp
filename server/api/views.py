@@ -13,6 +13,7 @@ from server.app_messaging import send_notification
 import logging
 
 
+# Standard api endpoint for shopping items
 class ShoppingItemViewSet(ModelViewSet):
     """Gives us the api viewset for a shopping item"""
     authentication_classes = [
@@ -41,6 +42,7 @@ class ShoppingItemViewSet(ModelViewSet):
         model = ShoppingItem
 
 
+# This endpoint is specific to adding new shopping items from the app
 class AddShoppingItemViewSet(ModelViewSet):
     """Gives us the api viewset for posting a new shopping item"""
     authentication_classes = [
@@ -70,6 +72,7 @@ class AddShoppingItemViewSet(ModelViewSet):
         model = ShoppingItem
 
 
+# View to add item from a Raspberry Pi - API endpoint
 class AddItemFromPi(ModelViewSet):
     """Allows items to be added from the Raspberry Pi"""
     authentication_classes = [
